@@ -7,20 +7,22 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.CalculationService;
+import model.ListService;
 
 /**
  *
  * @author jcarl
  */
-@WebServlet(name = "CalculatorController", urlPatterns = {"/calculate"})
-public class CalculatorController extends HttpServlet {
+@WebServlet(name = "ListController", urlPatterns = {"/ListController"})
+public class ListController extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,40 +36,12 @@ public class CalculatorController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
-        CalculationService service = new CalculationService();
-        String action = request.getParameter("action");
-        double responseMsg = 0;
+        ListService service = new ListService();
+        List<String> shoppingList = service.getShoppingList();
+        request.setAttribute("shoppingList", shoppingList);
         
-        try {
-            if (action.equalsIgnoreCase("rectangle")){
-                String length = request.getParameter("length");
-                String width = request.getParameter("width");
-
-                responseMsg = service.getAreaOfRectangle(length, width);
-                request.setAttribute("answer", responseMsg);
-
-            } else if (action.equalsIgnoreCase("circle")){
-                String radius = request.getParameter("radius");
-
-                responseMsg = service.getAreaOfCircle(radius);
-                request.setAttribute("answer2", responseMsg);
-
-            } else if (action.equalsIgnoreCase("triangle")){
-                String sideA = request.getParameter("sideA");
-                String sideB = request.getParameter("sideB");
-
-                responseMsg = service.getHypotenuse(sideA, sideB);
-                request.setAttribute("answer3", responseMsg);
-            }
-        } catch (IllegalArgumentException iae){
-            request.setAttribute("answer", service.getERROR_MSG());
-            request.setAttribute("answer2", service.getERROR_MSG());
-            request.setAttribute("answer2", service.getERROR_MSG());
-        }
-        
-        RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("/listTest.jsp");
         view.forward(request, response);
-        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

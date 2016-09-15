@@ -21,6 +21,7 @@ import model.CalculationService;
  */
 @WebServlet(name = "CalculatorController", urlPatterns = {"/calculate"})
 public class CalculatorController extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -33,41 +34,47 @@ public class CalculatorController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         CalculationService service = new CalculationService();
         String action = request.getParameter("action");
         double responseMsg = 0;
-        
-        try {
-            if (action.equalsIgnoreCase("rectangle")){
+
+        if (action.equalsIgnoreCase("rectangle")) {
+            try {
                 String length = request.getParameter("length");
                 String width = request.getParameter("width");
 
                 responseMsg = service.getAreaOfRectangle(length, width);
                 request.setAttribute("answer", responseMsg);
+            } catch (IllegalArgumentException iae) {
+                request.setAttribute("answer", service.getERROR_MSG());
+            }
 
-            } else if (action.equalsIgnoreCase("circle")){
+        } else if (action.equalsIgnoreCase("circle")) {
+            try {
                 String radius = request.getParameter("radius");
 
                 responseMsg = service.getAreaOfCircle(radius);
                 request.setAttribute("answer2", responseMsg);
+            } catch (IllegalArgumentException iae) {
+                request.setAttribute("answer2", service.getERROR_MSG());
+            }
 
-            } else if (action.equalsIgnoreCase("triangle")){
+        } else if (action.equalsIgnoreCase("triangle")) {
+            try {
                 String sideA = request.getParameter("sideA");
                 String sideB = request.getParameter("sideB");
 
                 responseMsg = service.getHypotenuse(sideA, sideB);
                 request.setAttribute("answer3", responseMsg);
+            } catch (IllegalArgumentException iae) {
+                request.setAttribute("answer3", service.getERROR_MSG());
             }
-        } catch (IllegalArgumentException iae){
-            request.setAttribute("answer", service.getERROR_MSG());
-            request.setAttribute("answer2", service.getERROR_MSG());
-            request.setAttribute("answer2", service.getERROR_MSG());
         }
-        
+
         RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
         view.forward(request, response);
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

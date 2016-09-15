@@ -11,7 +11,7 @@ package model;
  */
 public class CalculationService {
     private final double PI = 3.14159265359;
-    private final String ERROR_MSG = "Length and/or Width are invalid values.";
+    private final String ERROR_MSG = "Invalid values.";
     
     public final double getAreaOfRectangle(String len, String wid) throws IllegalArgumentException{
         if (len == null || len.isEmpty() || wid == null || wid.isEmpty()){
